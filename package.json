@@ -1,0 +1,33 @@
+{
+  "name": "kaide-bot",
+  "version": "0.0.1",
+  "description": "A discord bot to record for the 59th regiment",
+  "engines": {
+    "node": ">=8.1.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "start-dev": "nodemon ."
+  },
+  "author": {
+    "name": "Tim Howard",
+    "email": "13tim37@gmail.com"
+  },
+  "config": {
+    "prefix": "!"
+  },
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "dotenv": "^6.1.0",
+    "mongoose": "^5.3.4",
+    "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/13Tim37/"
+  }
+}
