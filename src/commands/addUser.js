@@ -8,7 +8,6 @@ async function accessSpreadsheet(name, meritsValue) {
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
     const sheet = info.worksheets[0];
-
     
     const rows = await promisify(sheet.getRows)({
         query: `username = ${name}`
@@ -22,5 +21,3 @@ async function accessSpreadsheet(name, meritsValue) {
         await promisify(sheet.addRow)(newUser);
     }
 }
-
-accessSpreadsheet('decoy', 10);
