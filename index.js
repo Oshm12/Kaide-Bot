@@ -8,6 +8,7 @@ const help = require('./src/commands/help')
 const poll = require('./src/commands/poll')
 const notify = require('./src/commands/notify')
 const accessSpreadsheet = require('./src/commands/accessSpreadsheet') 
+const addUser = require('./src/commands/addUser') 
 
 mongoose.connect(process.env.DATABASE_URL, { dbName: 'test', useNewUrlParser: true })
 
@@ -45,6 +46,10 @@ bot.on('message', msg => {
 	
 	else if (command === 'add' && true /* admin */) {
 		accessSpreadsheet(bot, msg, args)
+	}
+	
+	else if (command === 'newUser' && true /* admin */) {
+		addUser(bot, msg, args)
 	}
 })
 
