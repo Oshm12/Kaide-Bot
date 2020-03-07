@@ -5,28 +5,12 @@ const creds = require('../../client_secret.json');
 
 const updateUsers = async (bot, args, msg) => {
 
-
     var discordMembers = args.guild.members;
     let membersArray = [];
     let nicknamesArray = [];
     const myMembers = discordMembers.map(member => {
         //'501116539702083584'
-        if (member._roles.includes('501116539702083584')) {
-            membersArray.push(member.id);
-            nicknamesArray.push(member.displayName.replace(/[\\<>@#&!]/g, ""));
-            //return member.username;
-            return member.id;
-
-        }
-        //'501116705246806049' 
-        if (member._roles.includes('501116705246806049')) {
-            membersArray.push(member.id);
-            nicknamesArray.push(member.displayName.replace(/[\\<>@#&!]/g, ""));
-            //return member.username;
-            return member.id;
-        }
-        //'501116197094293504'
-        if (member._roles.includes('501116197094293504')) {
+        if (member._roles.includes('501116539702083584') || member._roles.includes('501116705246806049') || member._roles.includes('501116197094293504')) {
             membersArray.push(member.id);
             nicknamesArray.push(member.displayName.replace(/[\\<>@#&!]/g, ""));
             //return member.username;
@@ -35,15 +19,12 @@ const updateUsers = async (bot, args, msg) => {
     });
 
     
-    const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREAD_SHEET_KEY);
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
     const sheet = info.worksheets[0];
 
-    
     const rows = await promisify(sheet.getRows)({
-
-       
 
     });
    
@@ -61,7 +42,6 @@ const updateUsers = async (bot, args, msg) => {
                     
                     newUser = false;
                     
-
                 }
             }
         }
@@ -82,8 +62,6 @@ const updateUsers = async (bot, args, msg) => {
 
     }
 
-
-
     //console.log(membersArray);
     //console.log(nicknamesArray);
     console.log("Cav, line and rifles total: " + membersArray.length);
@@ -91,8 +69,4 @@ const updateUsers = async (bot, args, msg) => {
 
 }
  
-
-
-
-
 module.exports = updateUsers;
