@@ -7,7 +7,7 @@ const accessSpreadsheet = async (bot, username, meritsValue) => {
 
     //console.log(meritsValue)
 
-    const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREAD_SHEET_KEY);
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
     const sheet = info.worksheets[0];
