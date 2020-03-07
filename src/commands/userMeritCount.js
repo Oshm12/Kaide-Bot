@@ -20,14 +20,12 @@ const userMeritCount = async (bot, username, meritsValue) => {
     }
 
     else {
-
         rows.forEach(row => {
             let meritsToOutput = 0;
             meritsToOutput = row.merits;
             console.log(row.merits);
             username.channel.send(`User ${meritsValue[0]} has ${meritsToOutput} merits.`);
         })
-
     }
 };
 

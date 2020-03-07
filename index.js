@@ -14,8 +14,6 @@ const updateUsers = require('./src/commands/updateUsers')
 const userMeritCount = require('./src/commands/userMeritCount')
 const addNewEvent = require('./src/commands/newEvent')
 
-
-
 mongoose.connect(process.env.DATABASE_URL, { dbName: 'test', useNewUrlParser: true })
 
 const bot = new Discord.Client()
@@ -36,39 +34,23 @@ bot.on('ready', () => {
 
 
 bot.on('message', msg => {
-
-   
     
     let shill = msg.content.split(" ");
     console.log("shill");
-    for (n in shill) { 
-        console.log("Testing: " + shill[n]);
-        if (shill[n] === 'https://youtu.be/Bcx4IL7XBRE') {
+
+    shill.map(s => {
+        console.log(`Testing: ${s}`);
+        if (s === 'https://youtu.be/Bcx4IL7XBRE' || s === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE&feature=emb_title' || s === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE') {
             msg.delete();
             console.log("Delete");
             msg.channel.send("Delete Shills.");
         }
+    });
 
-
-        if (shill[n] === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE&feature=emb_title') {
-            msg.delete();
-            console.log("Delete");
-            msg.channel.send("Delete Shills.");
-        }
-
-        if (shill[n] === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE') {
-            msg.delete();
-            console.log("Delete");
-            msg.channel.send("Delete Shills.");
-        }
-        'https://www.youtube.com/watch?v=Bcx4IL7XBRE'
-}
-
-    if (msg.author.id ===  '129315536734650368'){
-
+    if (msg.author.id === '129315536734650368'){
+        // GATEEEEMMMM
         msg.delete();
     }
-
 
 	if (msg.author.bot) return
 	if (!msg.content.startsWith(config.prefix)) return
@@ -83,7 +65,6 @@ bot.on('message', msg => {
         msg.channel.send(`Version: ${package.version}`)
     }
 
-    
     else if (command === 'help' || command === 'h') {
         help(msg)
     }
@@ -99,7 +80,6 @@ bot.on('message', msg => {
     else if (command === 'update' && true /* admin */) {
         console.log("Command update read in. List update");
         updateUsers(bot, msg, args)
-       
     }
 
     else if (command === 'add' && true /* admin */) {
@@ -111,21 +91,17 @@ bot.on('message', msg => {
     else if (command === 'new' && true /* admin */) {
         addUser(bot, msg, args);
         console.log("Command newUser read in.");
-        
     }
 
     else if (command === 'merits' ) {
         userMeritCount(bot, msg, args);
         console.log("Command merits/userMeritCount read in.");
-
     }
 
     else if (command === 'event') {
         addNewEvent(bot, msg, args);
         console.log("Command event (addNewEvent) read in.");
-
     }
-  
 })
 
 bot.on('error', err => {

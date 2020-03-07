@@ -181,11 +181,6 @@ const newEvent = async (bot, msg, args) => {
         console.log('The answer to life, the universe, and everything!');
         channel.send("Special Scheduled Messaged Test");
     });  */
-
-    
-     
-    
-
 }
 
 module.exports = newEvent;

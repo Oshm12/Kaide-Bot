@@ -42,7 +42,6 @@ const updateUsers = async (bot, args, msg) => {
                     
                     newUser = false;
                     
-
                 }
             }
         }
