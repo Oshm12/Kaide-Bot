@@ -13,6 +13,9 @@ const addUser = require('./src/commands/addUser')
 const updateUsers = require('./src/commands/updateUsers')
 const userMeritCount = require('./src/commands/userMeritCount')
 const addNewEvent = require('./src/commands/newEvent')
+const attendance = require('./src/commands/attendance')
+
+
 
 mongoose.connect(process.env.DATABASE_URL, { dbName: 'test', useNewUrlParser: true })
 
@@ -34,23 +37,34 @@ bot.on('ready', () => {
 
 
 bot.on('message', msg => {
-    
-    let shill = msg.content.split(" ");
-    console.log("shill");
+    //
+    let censor = msg.content;
+    censor = censor.toLowerCase();
 
-    shill.map(s => {
-        console.log(`Testing: ${s}`);
-        if (s === 'https://youtu.be/Bcx4IL7XBRE' || s === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE&feature=emb_title' || s === 'https://www.youtube.com/watch?v=Bcx4IL7XBRE') {
-            msg.delete();
-            console.log("Delete");
-            msg.channel.send("Delete Shills.");
-        }
-    });
+    if (censor.includes("nigger") || censor.includes("nigga")) {
 
-    if (msg.author.id === '129315536734650368'){
-        // GATEEEEMMMM
-        msg.delete();
+        let user = msg.member;
+        user.kick("You've been warned");
+        msg.delete(); 
+
+        const channelId = "501377189703450624";
+
+        const myChan = bot.channels.find(chan => chan.id === channelId);
+
+        myChan.send("User kicked for n word ussage: " + user + "\nMessage was: " + msg.content);
+
+        console.log("Test word kicked: " + msg.content);
+
     }
+
+
+    if (msg.content ===  '129315536734650368'){
+
+        //msg.delete();
+      //  msg.channel.send("I study media");
+        //msg.react('514274069294612482');
+    }
+
 
 	if (msg.author.bot) return
 	if (!msg.content.startsWith(config.prefix)) return
@@ -65,6 +79,7 @@ bot.on('message', msg => {
         msg.channel.send(`Version: ${package.version}`)
     }
 
+    
     else if (command === 'help' || command === 'h') {
         help(msg)
     }
@@ -80,6 +95,7 @@ bot.on('message', msg => {
     else if (command === 'update' && true /* admin */) {
         console.log("Command update read in. List update");
         updateUsers(bot, msg, args)
+       
     }
 
     else if (command === 'add' && true /* admin */) {
@@ -91,17 +107,27 @@ bot.on('message', msg => {
     else if (command === 'new' && true /* admin */) {
         addUser(bot, msg, args);
         console.log("Command newUser read in.");
+        
     }
 
     else if (command === 'merits' ) {
         userMeritCount(bot, msg, args);
         console.log("Command merits/userMeritCount read in.");
+
     }
 
     else if (command === 'event') {
         addNewEvent(bot, msg, args);
         console.log("Command event (addNewEvent) read in.");
+
     }
+
+    else if (command === 'attend' || command === 'attendance') {
+        attendance(bot, msg, args);
+        console.log("Command event (attendance) read in.");
+
+    }
+  
 })
 
 bot.on('error', err => {
@@ -111,3 +137,4 @@ bot.on('error', err => {
 // Invite link
 // https://discordapp.com/oauth2/authorize?client_id=501866111017680911&scope=bot
 bot.login(process.env.DISCORD_ACCESS_TOKEN);
+
