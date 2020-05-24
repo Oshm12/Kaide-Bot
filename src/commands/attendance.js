@@ -2,7 +2,7 @@
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
 const creds = require('../../client_secret.json');
-var membersAttended = []; 
+var membersAttended = [];
 
 var newEventAttendance = {
 
@@ -19,8 +19,8 @@ const attendance = async (bot, args, msg) => {
     const myChan = bot.channels.find(chan => chan.id === channelId);
     const myMembers = Array.from(myChan.members.keys());
 
-    
-    
+
+
     membersAttended = myMembers;
     //membersAttended.push(myMembers);
 
@@ -29,7 +29,7 @@ const attendance = async (bot, args, msg) => {
 
     console.log("Updating attendance.");
     //update google page with membersAtteneded
-    const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
+    const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREAD_SHEET_KEY);
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
     const sheet = info.worksheets[1];
@@ -48,7 +48,7 @@ const attendance = async (bot, args, msg) => {
 
     newEventAttendance.Date = a;
 
- 
+
 
     for (var t in membersAttended) {
 
@@ -61,7 +61,7 @@ const attendance = async (bot, args, msg) => {
     totalAtt = Object.keys(newEventAttendance).length;
 
     newEventAttendance.total = totalAtt - 1;
-    
+
 
 }
 
@@ -75,10 +75,10 @@ const updateAttendance = async (bot, args, msg) => {
 
 
     await promisify(sheet.addRow)(newEventAttendance);
-  
+
     console.log("NEW EVENT ATTENDANCE: ")
     console.log(Object.keys(newEventAttendance));
-    
+
     console.log("FOR LOOPS COMPLETED");
    // }
 }

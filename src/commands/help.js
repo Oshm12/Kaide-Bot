@@ -4,7 +4,10 @@ const commands = [
     '!version - Show bot version',
     '!add @user *meritValue* - Allows admins to add merits to a user',
     '!new @user - Allows admins to add a new user to the merit list',
-    '!update - Updates users to databse, those in either of the 3 companies'
+    '!merits - Allows anyone to check the merits of a user',
+    '!attend - Admins: Updates attendance manual, try not to use',
+    '!update - Admins: Updates users to databse, those in LIX',
+    '!event - Admins: Creates a new event for the bots to create annoucements and record attendance for. Follow the steps.'
 ]
 
 const help = msg => {
@@ -13,7 +16,7 @@ const help = msg => {
         **Commands**\n\n${commands.join('\n')}
         `
     )
-    
+
     msg.reply(`check your DMs`)
 }
 

@@ -8,12 +8,13 @@ const schedule = require('node-schedule');
 const help = require('./src/commands/help')
 const poll = require('./src/commands/poll')
 const notify = require('./src/commands/notify')
-const accessSpreadsheet = require('./src/commands/accessSpreadsheet') 
+const accessSpreadsheet = require('./src/commands/accessSpreadsheet')
 const addUser = require('./src/commands/addUser')
 const updateUsers = require('./src/commands/updateUsers')
 const userMeritCount = require('./src/commands/userMeritCount')
 const addNewEvent = require('./src/commands/newEvent')
 const attendance = require('./src/commands/attendance')
+const weeklySchedule = require('./src/commands/weeklySchedule')
 
 
 
@@ -45,7 +46,7 @@ bot.on('message', msg => {
 
         let user = msg.member;
         user.kick("You've been warned");
-        msg.delete(); 
+        msg.delete();
 
         const channelId = "501377189703450624";
 
@@ -79,7 +80,7 @@ bot.on('message', msg => {
         msg.channel.send(`Version: ${package.version}`)
     }
 
-    
+
     else if (command === 'help' || command === 'h') {
         help(msg)
     }
@@ -95,7 +96,7 @@ bot.on('message', msg => {
     else if (command === 'update' && true /* admin */) {
         console.log("Command update read in. List update");
         updateUsers(bot, msg, args)
-       
+
     }
 
     else if (command === 'add' && true /* admin */) {
@@ -107,7 +108,7 @@ bot.on('message', msg => {
     else if (command === 'new' && true /* admin */) {
         addUser(bot, msg, args);
         console.log("Command newUser read in.");
-        
+
     }
 
     else if (command === 'merits' ) {
@@ -127,7 +128,14 @@ bot.on('message', msg => {
         console.log("Command event (attendance) read in.");
 
     }
-  
+
+    else if (command === 'schedule') {
+        weeklySchedule(msg);
+        console.log("Command event (schedule) read in.");
+
+
+    }
+
 })
 
 bot.on('error', err => {
@@ -137,4 +145,3 @@ bot.on('error', err => {
 // Invite link
 // https://discordapp.com/oauth2/authorize?client_id=501866111017680911&scope=bot
 bot.login(process.env.DISCORD_ACCESS_TOKEN);
-
