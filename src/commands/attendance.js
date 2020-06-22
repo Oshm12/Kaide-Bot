@@ -14,7 +14,7 @@ const attendance = async (bot, args, msg) => {
     var discordMembers = args.guild.members
 
     //find those in channel
-    const channelId = "501377189703450624";
+    const channelId = "693862501137252403";
 
     const myChan = bot.channels.find(chan => chan.id === channelId);
     const myMembers = Array.from(myChan.members.keys());
@@ -63,24 +63,6 @@ const attendance = async (bot, args, msg) => {
     newEventAttendance.total = totalAtt - 1;
 
 
-}
-
-
-const updateAttendance = async (bot, args, msg) => {
-
-    const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
-    await promisify(doc.useServiceAccountAuth)(creds);
-    const info = await promisify(doc.getInfo)();
-    const sheet = info.worksheets[1];
-
-
-    await promisify(sheet.addRow)(newEventAttendance);
-
-    console.log("NEW EVENT ATTENDANCE: ")
-    console.log(Object.keys(newEventAttendance));
-
-    console.log("FOR LOOPS COMPLETED");
-   // }
 }
 
 module.exports = attendance;

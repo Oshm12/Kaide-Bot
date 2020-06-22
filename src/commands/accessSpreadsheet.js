@@ -46,7 +46,7 @@ const accessSpreadsheet = async (bot, username, meritsValue) => {
         valueToAdd = meritsValue[2];
         console.log("debug 1");
     }*/
-    
+
     console.log(valueToAdd);
 
     //if (valueToAdd >= 0 || valueToAdd <= 0) {
