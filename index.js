@@ -16,7 +16,7 @@ const addNewEvent = require('./src/commands/newEvent')
 const attendance = require('./src/commands/attendance')
 const weeklySchedule = require('./src/commands/weeklySchedule')
 
-
+const devChannelID = "693888511010406421";
 
 mongoose.connect(process.env.DATABASE_URL, { dbName: 'test', useNewUrlParser: true })
 
@@ -43,19 +43,26 @@ bot.on('message', msg => {
     censor = censor.toLowerCase();
 
     if (censor.includes("nigger") || censor.includes("nigga")) {
+        if(!msg.author.bot){
+            let user = msg.member;
+            const channelId = devChannelID;
+            const myChan = bot.channels.find(chan => chan.id === channelId);
 
-        let user = msg.member;
-        user.kick("You've been warned");
-        msg.delete();
+            if(user.kickable){
+                user.kick("You've been warned")
+                msg.delete();
 
-        const channelId = "501377189703450624";
+                //posts in dev channel with who was banned and the offending message
+                myChan.send("User kicked for use of proscribed word: " + user + "\nMessage was: " + msg.content);
 
-        const myChan = bot.channels.find(chan => chan.id === channelId);
+                console.log("Test word kicked: " + msg.content);
+            }
 
-        myChan.send("User kicked for n word ussage: " + user + "\nMessage was: " + msg.content);
-
-        console.log("Test word kicked: " + msg.content);
-
+            else{
+                myChan.send("User not kicked due to perms/error " + user + "\nMessage was: " + msg.content);
+                console.log("Test word kicked: " + msg.content);
+            }
+        }
     }
 
 
