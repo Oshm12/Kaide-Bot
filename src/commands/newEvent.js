@@ -1,5 +1,6 @@
 ﻿const schedule = require('node-schedule');
-
+const attendance = require('./attendance.js');
+const updateAttendance = require('./updateAttendance.js');
 
 
 class Event {
@@ -29,7 +30,7 @@ const newEvent = async (bot, msg, args) => {
     bot.on('message', msg2 => {
         if (msg2.author.bot) return
         if (msg2.author != msg.author) return
-        if (msg2.channel != msg.channel) return 
+        if (msg2.channel != msg.channel) return
 
         if (n == 1) {
             //get tags to pingu
@@ -54,18 +55,18 @@ const newEvent = async (bot, msg, args) => {
             return
         }
         if (n == 3) {
-            //get string to play back  
+            //get string to play back
             event.title = msg2.content;
             console.log("Playback string: " + msg2.content);
 
             msg2.channel.send("Everything read for the event");
             n = 4;
             msg2.channel.send("Check all details before event is finalised (this cant be undone so dont fuck up).")
-    +       msg2.channel.send("Event Name: " + event.title);
+            msg2.channel.send("Event Name: " + event.title);
             msg2.channel.send("Event Date and time: " + event.date);
             msg2.channel.send("Event Companies/Groups: " + event.companies);
             msg2.channel.send("\n\nHappy with everything? Yes to confirmed event, No to reject.")
-
+            console.log("CHANNEL TEST IS HERE : " + msg2.channel)
             return
 
         }
@@ -74,82 +75,113 @@ const newEvent = async (bot, msg, args) => {
 
             console.log(msg2.content);
 
+            msg2.content = msg2.content.toLowerCase();
+
             if (msg2.content === 'yes') {
                 msg2.channel.send("Event confirmed.");
 
                 //ANNOUNCENTS SET UP FOR SPAM
 
-                let varDate = event.date.setHours(event.date.getHours() - 1);
 
-                var OneHour = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                let varDate = event.date.setHours(event.date.getHours() - 1);
+                console.log("Setting up scheduled pings");
+                var OneHour = schedule.scheduleJob(varDate, function () {
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("1 hour till " + event.title + ". For " + event.companies);
                     console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                });  
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 varDate = event.date.setMinutes(event.date.getMinutes() + 30);
 
                 var ThirtyMins = schedule.scheduleJob(varDate, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("30 minutes " + event.title + ". For " + event.companies);
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                });  
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 varDate = event.date.setMinutes(event.date.getMinutes() + 10);
 
                 var TwentyMins = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("20 minutes " + event.title + ". For " + event.companies);
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                }); 
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 varDate = event.date.setMinutes(event.date.getMinutes() + 10);
 
                 var TenMins = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("10 mintues till " + event.title + ". For " + event.companies);
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                }); 
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 varDate = event.date.setMinutes(event.date.getMinutes() + 5);
 
                 var FiveMins = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("5 minutes till " + event.title + ". For " + event.companies);
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                }); 
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 varDate = event.date.setMinutes(event.date.getMinutes() + 5);
 
                 var ZeroMins = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
+                    const channel = bot.channels.find('name', "🕐announcements");
                     channel.send("Starting now, get on: " + event.title + ". For " + event.companies);
-                    channel.send("0 done");
+                    //channel.send("0 done");
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
-                }); 
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test with date read in from discord !event command.");
+                });
 
                 //ATTENDANCE CHECKERS
 
                 var onTime = schedule.scheduleJob(event.date, function () {
-                    const channel = bot.channels.find('name', "dev-wookie");
-                    
+                    //const channel = bot.channels.find('name', "dev-wookie");
+
                     console.log("0 attendance check");
+                    attendance(bot,msg,args);
+
                     //channel.send(message)
                     //console.log(Date.now() + 'The answer to life, the universe, and everything!');
-                    channel.send(Date.now() + "Special Scheduled Messaged Test attendance checker !event command.");
-                }); 
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test attendance checker !event command.");
+                });
 
+                varDate = event.date.setMinutes(event.date.getMinutes() + 30);
+
+                var halfWay = schedule.scheduleJob(event.date, function () {
+                    //const channel = bot.channels.find('name', "dev-wookie");
+
+                    console.log("0 attendance check");
+                    attendance(bot,msg,args);
+
+                    //channel.send(message)
+                    //console.log(Date.now() + 'The answer to life, the universe, and everything!');
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test attendance checker !event command.");
+                });
+
+                varDate = event.date.setMinutes(event.date.getMinutes() + 30);
+
+                var end = schedule.scheduleJob(event.date, function () {
+                    //const channel = bot.channels.find('name', "dev-wookie");
+
+                    console.log("0 attendance check");
+                    attendance(bot,msg,args);
+                    updateAttendance(bot,msg,args);
+
+                    //channel.send(message)
+                    //console.log(Date.now() + 'The answer to life, the universe, and everything!');
+                    //channel.send(Date.now() + "Special Scheduled Messaged Test attendance checker !event command.");
+                });
 
 
 
@@ -168,9 +200,9 @@ const newEvent = async (bot, msg, args) => {
                 n = 4;
                 return
             }
-          
+
         }
-      
+
     })
 
     //msg.channel.send("Enter Date and time");

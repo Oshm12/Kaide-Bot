@@ -1,54 +1,76 @@
-const addUser = require('./addUser')
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
+
 const creds = require('../../client_secret.json');
-var membersAttended = []; 
+
+const accessSpreadsheet = async (bot, username, meritsValue) => {
+
+    //console.log(meritsValue)
+
+    const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
+    await promisify(doc.useServiceAccountAuth)(creds);
+    const info = await promisify(doc.getInfo)();
+    const sheet = info.worksheets[0];
+
+    for (var t = 0; t < meritsValue.length; t++) {
+
+        if (meritsValue[t] == '') {
+            meritsValue.splice(t, 1);
+            t--;
+        }
+
+    }
+
+    const id = meritsValue[0].replace(/[\\<>@#&!]/g, "");
+
+    const rows = await promisify(sheet.getRows)({
+        query: `id = ${id}`
+    });
+
+    console.log(meritsValue);
 
 
-const attendance = async (bot, args, msg) => {
+    let valueToAdd = meritsValue[1];
 
-    var discordMembers = args.guild.members
+    if (isNaN(valueToAdd)) {
+        return;
+        valueToAdd = 0;
+        username.channel.send(`Can't add, NaN.`);
+    }
+    console.log(meritsValue);
+    console.log(typeof valueToAdd);
+    console.log("valueToAdd: " + valueToAdd);
 
-    //find those in channel
-    const channelId = "501377189703450624";
+    /*if (typeof meritsValue[1] == '') {
+        console.log("true");
+        valueToAdd = meritsValue[2];
+        console.log("debug 1");
+    }*/
 
-    const myChan = bot.channels.find(chan => chan.id === channelId);
-    const myMembers = Array.from(myChan.members.keys());
-    
-    console.log(myMembers);
+    console.log(valueToAdd);
 
-    membersAttended = myMembers;
-    //membersAttended.push(myMembers);
-    
-    updateAttendance(bot, args, msg);
+    //if (valueToAdd >= 0 || valueToAdd <= 0) {
+        valueToAdd = +valueToAdd;
+    console.log(typeof valueToAdd);
+    console.log(valueToAdd);
+    //}
+
+    if (typeof valueToAdd != "number") {
+        username.channel.send(`Invalid, you can only add integers, try again.`);
+        return;
+    }
+
+    rows.forEach(row => {
+        row.merits = +row.merits + valueToAdd;
+        row.save()
+        username.channel.send(`Successfully added ${valueToAdd} merits to ${meritsValue[0]}.`)
+
+    })
+
+    if (rows.length === 0) {
+        username.channel.send(`User does not exist, check spelling or add new user.`);
+    }
 
 }
 
-
-const updateAttendance = async (bot, args, msg) => {
-
-    
-
-    //if (membersAttended) {
-
-        console.log("Updating attendance.");
-        //update google page with membersAtteneded
-        const doc = new GoogleSpreadsheet('1334oQdRkEjDzWZdmHiypkfgErpJAZw4FRHU33v8Ygm4');
-        await promisify(doc.useServiceAccountAuth)(creds);
-        const info = await promisify(doc.getInfo)();
-        const sheet = info.worksheets[1];
-
-        const rows = await promisify(sheet.getRows)({
-
-
-        });
-
-        console.log("Rows: ");
-        console.log(rows);
-        
-        
-    console.log("FOR LOOPS COMPLETED");
-   // }
-}
-
-module.exports = attendance;
+module.exports = accessSpreadsheet

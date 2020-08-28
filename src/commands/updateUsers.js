@@ -10,7 +10,7 @@ const updateUsers = async (bot, args, msg) => {
     let nicknamesArray = [];
     const myMembers = discordMembers.map(member => {
         //'501116539702083584'
-        if (member._roles.includes('501116539702083584') || member._roles.includes('501116705246806049') || member._roles.includes('501116197094293504')) {
+        if (member._roles.includes('693846983131267114')) {
             membersArray.push(member.id);
             nicknamesArray.push(member.displayName.replace(/[\\<>@#&!]/g, ""));
             //return member.username;
@@ -18,7 +18,7 @@ const updateUsers = async (bot, args, msg) => {
         }
     });
 
-    
+
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREAD_SHEET_KEY);
     await promisify(doc.useServiceAccountAuth)(creds);
     const info = await promisify(doc.getInfo)();
@@ -27,9 +27,9 @@ const updateUsers = async (bot, args, msg) => {
     const rows = await promisify(sheet.getRows)({
 
     });
-   
+
     //checking discord members list vs sheet list (IDs)
-    
+
     for (var n in membersArray) {
 
         let newUser = true;
@@ -39,9 +39,9 @@ const updateUsers = async (bot, args, msg) => {
             if (newUser == true) {
 
                 if (membersArray[n] == rows[y].id) {
-                    
+
                     newUser = false;
-                    
+
                 }
             }
         }
@@ -57,16 +57,16 @@ const updateUsers = async (bot, args, msg) => {
                 merits: 0
             }
             await promisify(sheet.addRow)(newUserProfile);
-            args.channel.send(`Successfully added user: <@${membersArray[n]}>.`); 
+            args.channel.send(`Successfully added user: <@${membersArray[n]}>.`);
         }
 
     }
 
     //console.log(membersArray);
     //console.log(nicknamesArray);
-    console.log("Cav, line and rifles total: " + membersArray.length);
+    console.log("Total LIX members: " + membersArray.length);
     args.channel.send(`Read in.`);
 
 }
- 
+
 module.exports = updateUsers;
