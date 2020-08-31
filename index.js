@@ -5,6 +5,9 @@ const mongoose = require("mongoose")
 const config = package.config
 const schedule = require('node-schedule');
 
+//Test
+const censor_list = require('./censor_list.json');
+
 const help = require('./src/commands/help')
 const poll = require('./src/commands/poll')
 const notify = require('./src/commands/notify')
@@ -25,6 +28,7 @@ const bot = new Discord.Client()
 bot.on('ready', () => {
     console.log(`${bot.user.username} v${package.version} is ready!`)
     console.log("Date is here: " + Date.now());
+
    // console.log("Time is here: " + getTime());
 
     /*
@@ -39,32 +43,34 @@ bot.on('ready', () => {
 
 bot.on('message', msg => {
     //
-    let censor = msg.content;
-    censor = censor.toLowerCase();
+    let censor_msg = msg.content;
+    censor_msg = censor_msg.toLowerCase();
 
-    if (censor.includes("nigger") || censor.includes("nigga")) {
-        if(!msg.author.bot){
-            let user = msg.member;
-            const channelId = devChannelID;
-            const myChan = bot.channels.find(chan => chan.id === channelId);
+    for(var h in censor_list.words){
+        if (censor_msg.includes(censor_list.words[h])) {
 
-            if(user.kickable){
-                user.kick("You've been warned")
-                msg.delete();
+            if(!msg.author.bot){
+                let user = msg.member;
+                const channelId = devChannelID;
+                const myChan = bot.channels.find(chan => chan.id === channelId);
 
-                //posts in dev channel with who was banned and the offending message
-                myChan.send("User kicked for use of proscribed word: " + user + "\nMessage was: " + msg.content);
+                if(user.kickable){
+                    user.kick("You've been warned")
+                    msg.delete();
 
-                console.log("Test word kicked: " + msg.content);
-            }
+                    //posts in dev channel with who was banned and the offending message
+                    myChan.send("User kicked for use of proscribed word: " + user + "\nMessage was: " + msg.content);
 
-            else{
-                myChan.send("User not kicked due to perms/error " + user + "\nMessage was: " + msg.content);
-                console.log("Test word kicked: " + msg.content);
+                    console.log("Test word kicked: " + msg.content);
+                }
+
+                else{
+                    myChan.send("User not kicked due to perms/error " + user + "\nMessage was: " + msg.content);
+                    console.log("Test word kicked: " + msg.content);
+                }
             }
         }
     }
-
 
     if (msg.content ===  '129315536734650368'){
 
@@ -72,6 +78,7 @@ bot.on('message', msg => {
       //  msg.channel.send("I study media");
         //msg.react('514274069294612482');
     }
+
 
 
 	if (msg.author.bot) return
@@ -82,6 +89,15 @@ bot.on('message', msg => {
 	command = command.toLowerCase()
 
 	let args = msg.content.split(" ").slice(1)
+
+    //admin check
+    if(msg.member.roles.find(role => role.name === 'ADMINISTRATOR') || msg.member.roles.find(role => role.name === 'ROOT')) {
+
+        const authorAdmin = true;
+
+    }
+
+    else authorAdmin = false;
 
     if (command === 'version' || command === 'v') {
         msg.channel.send(`Version: ${package.version}`)
@@ -100,22 +116,30 @@ bot.on('message', msg => {
         notify(bot, msg, args)
     }
 
-    else if (command === 'update' && true /* admin */) {
-        console.log("Command update read in. List update");
-        updateUsers(bot, msg, args)
+    else if (command === 'update') {
+        if(authorAdmin){
+            console.log("Command update read in. List update");
+            updateUsers(bot, msg, args)
+        }
 
     }
 
-    else if (command === 'add' && true /* admin */) {
-        accessSpreadsheet(bot, msg, args)
-        console.log("Command add read in.");
-        //console.log(msg);
+    else if (command === 'add') {
+        if(authorAdmin){
+            accessSpreadsheet(bot, msg, args)
+            console.log("Command add read in.");
+        }
     }
 
-    else if (command === 'new' && true /* admin */) {
-        addUser(bot, msg, args);
-        console.log("Command newUser read in.");
+    else if (command === 'new') {
+        if(authorAdmin){
+            addUser(bot, msg, args);
+            console.log("Command newUser read in.");
+        }
 
+        else{
+            msg.channel.send("Only admins can use that role.");
+        }
     }
 
     else if (command === 'merits' ) {
@@ -125,23 +149,31 @@ bot.on('message', msg => {
     }
 
     else if (command === 'event') {
-        addNewEvent(bot, msg, args);
-        console.log("Command event (addNewEvent) read in.");
-
+        if(authorAdmin){
+            addNewEvent(bot, msg, args);
+            console.log("Command event (addNewEvent) read in.");
+        }
+        else{
+            msg.channel.send("Only admins can use that role.");
+        }
     }
 
     else if (command === 'attend' || command === 'attendance') {
-        attendance(bot, msg, args);
-        console.log("Command event (attendance) read in.");
+        if(authorAdmin){
+            attendance(bot, msg, args);
+            console.log("Command event (attendance) read in.");
+        }
+        else{
+            msg.channel.send("Only admins can use that role.");
+        }
 
     }
 
     else if (command === 'schedule') {
         weeklySchedule(msg);
         console.log("Command event (schedule) read in.");
-
-
     }
+
 
 })
 
